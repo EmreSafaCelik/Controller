@@ -1,0 +1,1 @@
+D:\software\frontend\Kotlin\Controller\opencv\build\intermediates\cxx\Debug\4u2x232f\obj\armeabi-v7a
