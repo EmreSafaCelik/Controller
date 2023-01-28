@@ -27,7 +27,7 @@ class CameraActivity : Activity(), CameraBridgeViewBase.CvCameraViewListener2 {
             when (status) {
                 SUCCESS -> {
                     run {
-                        Log.i(TAG, "OpenCv Is loaded")
+                        Log.i(TAG, "OpenCV is loaded")
                         mOpenCvCameraView!!.enableView()
                     }
                     run { super.onManagerConnected(status) }

@@ -16,9 +16,13 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.Window;
+import android.view.WindowManager;
 
 /**
  * This is a basic class, implementing the interaction with Camera and OpenCV library.
@@ -424,17 +428,38 @@ public abstract class CameraBridgeViewBase extends SurfaceView implements Surfac
 
         if (bmpValid && mCacheBitmap != null) {
             Canvas canvas = getHolder().lockCanvas();
+
+            // MUST BE APPLICABLE TO ALL DEVICES!
+//            WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+//            Display display = windowManager.getDefaultDisplay();
+//            DisplayMetrics displayMetrics = new DisplayMetrics();
+//            display.getMetrics(displayMetrics);
+//            float width = displayMetrics.widthPixels;
+//            float height = displayMetrics.heightPixels;
+
+            // set scales
+            float mScale1 = 0;
+            float mScale2 = 0;
+            if (canvas.getHeight() > canvas.getWidth()) {
+                canvas.rotate(270f, canvas.getWidth()/2, canvas.getHeight()/2);
+                mScale1 = 1.8f;
+                mScale2 = 1.8f;
+            } else {
+                mScale1 = 1.4f;
+                mScale2 = 1.3f;
+            }
+
             if (canvas != null) {
                 canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "mStretch value: " + mScale);
 
-                if (mScale != 0) {
+                if (mScale1 != 0) {
                     canvas.drawBitmap(mCacheBitmap, new Rect(0,0,mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),
-                         new Rect((int)((canvas.getWidth() - mScale*mCacheBitmap.getWidth()) / 2),
-                         (int)((canvas.getHeight() - mScale*mCacheBitmap.getHeight()) / 2),
-                         (int)((canvas.getWidth() - mScale*mCacheBitmap.getWidth()) / 2 + mScale*mCacheBitmap.getWidth()),
-                         (int)((canvas.getHeight() - mScale*mCacheBitmap.getHeight()) / 2 + mScale*mCacheBitmap.getHeight())), null);
+                         new Rect((int)((canvas.getWidth() - mScale1*mCacheBitmap.getWidth()) / 2),
+                         (int)((canvas.getHeight() - mScale2*mCacheBitmap.getHeight()) / 2),
+                         (int)((canvas.getWidth() - mScale1*mCacheBitmap.getWidth()) / 2 + mScale1*mCacheBitmap.getWidth()),
+                         (int)((canvas.getHeight() - mScale2*mCacheBitmap.getHeight()) / 2 + mScale2*mCacheBitmap.getHeight())), null);
                 } else {
                      canvas.drawBitmap(mCacheBitmap, new Rect(0,0,mCacheBitmap.getWidth(), mCacheBitmap.getHeight()),
                          new Rect((canvas.getWidth() - mCacheBitmap.getWidth()) / 2,
